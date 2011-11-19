@@ -72,4 +72,4 @@ cd /newroot
 pivot_root . boot
 
 echo "initfs: Starting the system..."
-exec /bin/chroot . /bin/sh -c '/bin/umount /boot; exec /sbin/init 3' </dev/console >/dev/console 2>&1
+exec /bin/chroot . /bin/sh -c 'exec /sbin/init 3' </dev/console >/dev/console 2>&1
