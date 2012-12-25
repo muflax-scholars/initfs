@@ -27,7 +27,11 @@ do
 	case ${name} in
 		realroot*)
 			ROOTVOL=`expr "${name}" : '.*=\(.*\)'`
-		;;
+		  ;;
+    volgroup*)
+      VG=`expr "${name}" : '.*=\(.*\)'`
+		  ;;
+
 	esac
 done
 
@@ -58,6 +62,12 @@ mount -n -t ext4 ${ROOTVOL} /newroot
 #echo "initfs: Failed, booting normally..." 2>&1
 #sleep 1
 #cryptsetup luksClose resume_swap
+
+# load lvm
+echo "initfs: Loading lvm..." 2>&1
+/bin/lvm vgscan --mknodes
+/bin/lvm lvchange -aly $VG/usr
+mount -n -t ext4 /dev/$VG/usr /newroot/usr
 
 # prepare booting of new root
 export PATH=/newroot/bin:/newroot/sbin:$PATH
