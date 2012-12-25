@@ -1,4 +1,4 @@
-OB#!/bin/sh
+#!/bin/sh
 # vars
 export PATH=/bin:/sbin
 
@@ -85,4 +85,3 @@ umount /proc
 # switch to new root
 echo "initfs: Starting the system..."
 exec switch_root /newroot /sbin/init
-
