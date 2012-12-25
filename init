@@ -1,4 +1,4 @@
-#!/bin/sh
+OB#!/bin/sh
 # vars
 export PATH=/bin:/sbin
 
@@ -67,6 +67,11 @@ mount -n -t ext4 ${ROOTVOL} /newroot || sh
 echo "initfs: Loading lvm in vg $VG..." 2>&1
 /bin/lvm vgscan --mknodes || sh
 /bin/lvm lvchange --sysinit -aly $VG/usr || sh
+
+# Check others fs
+/bin/e2fsck -C 0 -p /dev/mapper/$VG-usr || sh
+
+# mount /usr
 mount -n -t ext4 -o defaults,noatime /dev/mapper/$VG-usr /newroot/usr || sh
 
 # prepare booting of new root
