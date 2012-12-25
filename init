@@ -50,9 +50,9 @@ fi
 # Check root fs
 /bin/e2fsck -C 0 -p ${ROOTVOL}
 
-# mount root ro
-echo "initfs: Mounting $ROOTVOL readonly..." 2>&1
-mount -n -t ext4 ${ROOTVOL} /newroot
+# mount root
+echo "initfs: Mounting $ROOTVOL..." 2>&1
+mount -n -t ext4 ${ROOTVOL} /newroot || sh
 
 # resume swap
 #echo "initfs: Loading swap..." 2>&1
@@ -64,10 +64,10 @@ mount -n -t ext4 ${ROOTVOL} /newroot
 #cryptsetup luksClose resume_swap
 
 # load lvm
-echo "initfs: Loading lvm..." 2>&1
-/bin/lvm vgscan --mknodes
-/bin/lvm lvchange -aly $VG/usr
-mount -n -t ext4 /dev/$VG/usr /newroot/usr
+echo "initfs: Loading lvm in vg $VG..." 2>&1
+/bin/lvm vgscan --mknodes || sh
+/bin/lvm lvchange --sysinit -aly $VG/usr || sh
+mount -n -t ext4 -o defaults,noatime /dev/mapper/$VG-usr /newroot/usr || sh
 
 # prepare booting of new root
 export PATH=/newroot/bin:/newroot/sbin:$PATH
