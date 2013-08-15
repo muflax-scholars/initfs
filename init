@@ -38,14 +38,11 @@ done
 # Load keymap
 loadkeys /etc/neo.map
 
-# Set up dm-crypt mapping for root fs if needed
-if `/bin/cryptsetup isLuks ${ROOTVOL} 2>/dev/null`
-then
-  echo "loading root on ${ROOTVOL}..."
-	MAPPING=root
-	until /bin/cryptsetup luksOpen ${ROOTVOL} ${MAPPING}; do :; done
-	ROOTVOL=/dev/mapper/$MAPPING
-fi
+# Set up dm-crypt mapping for root fs
+echo "loading root on ${ROOTVOL}..."
+MAPPING=root
+until /bin/cryptsetup luksOpen ${ROOTVOL} ${MAPPING}; do :; done
+ROOTVOL=/dev/mapper/$MAPPING
 
 # Check root fs
 /bin/e2fsck -C 0 -p ${ROOTVOL}
