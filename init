@@ -14,6 +14,10 @@ mount -n -t sysfs none /sys
 echo /bin/mdev > /proc/sys/kernel/hotplug
 mdev -s
 
+# force creation of console
+mknod -m 622 /dev/console c 5 1
+mknod -m 622 /dev/tty0 c 4 0
+
 # raid
 mdadm --assemble --scan
 
